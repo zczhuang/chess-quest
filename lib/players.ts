@@ -5,6 +5,7 @@
 // table (UUID ids → syncable). The active player id lives in cq.activePlayer.
 
 import { createClient, hasSupabaseClient } from '@/lib/supabase/client';
+import { PLAYERS_TABLE } from '@/lib/supabase/tables';
 
 export type PlayerMode = 'kid' | 'classic';
 
@@ -61,7 +62,7 @@ export async function getCloudPlayers(): Promise<Player[] | null> {
     const sb = createClient();
     const { data: session } = await sb.auth.getSession();
     if (!session.session) return null;
-    const { data, error } = await sb.from('players').select('id, name, mode, avatar').order('created_at');
+    const { data, error } = await sb.from(PLAYERS_TABLE).select('id, name, mode, avatar').order('created_at');
     if (error) return null;
     return (data || []).map((r: any) => ({ id: r.id, name: r.name, mode: r.mode, avatar: r.avatar || '🌟' }));
   } catch {
@@ -75,7 +76,7 @@ export async function createCloudPlayer(name: string, mode: PlayerMode, avatar: 
     const { data: u } = await sb.auth.getUser();
     if (!u.user) return null;
     const { data, error } = await sb
-      .from('players')
+      .from(PLAYERS_TABLE)
       .insert({ account_id: u.user.id, name, mode, avatar })
       .select('id, name, mode, avatar')
       .single();

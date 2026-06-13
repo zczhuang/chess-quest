@@ -11,6 +11,7 @@
 // goes down), arbitrated by puzzles.ratingAt.
 
 import { createClient } from '@/lib/supabase/client';
+import { PROGRESS_TABLE } from '@/lib/supabase/tables';
 import type { PlayerState } from './store';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -40,7 +41,7 @@ async function signedIn(): Promise<boolean> {
 export async function pullAndMerge(playerId: string, state: PlayerState): Promise<boolean | null> {
   if (!isSyncable(playerId) || !(await signedIn())) return null;
   const { data: rows, error } = await sb()
-    .from('progress')
+    .from(PROGRESS_TABLE)
     .select('item_id, completed, best_stars, data')
     .eq('player_id', playerId);
   if (error || !rows) return null;
@@ -113,7 +114,7 @@ export async function pushState(playerId: string, state: PlayerState): Promise<v
   ].map((r) => ({ ...r, updated_at: new Date().toISOString() }));
 
   try {
-    await sb().from('progress').upsert(rows, { onConflict: 'player_id,item_id' });
+    await sb().from(PROGRESS_TABLE).upsert(rows, { onConflict: 'player_id,item_id' });
   } catch {
     /* fail-silent; localStorage remains source of truth */
   }
