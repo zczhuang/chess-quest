@@ -69,7 +69,7 @@ export interface GeminiCallOpts {
   thinkingBudget?: number;
 }
 
-const DEFAULT_MODEL = process.env.GEMINI_CHAT_MODEL || 'gemini-2.5-flash';
+const DEFAULT_MODEL = process.env.GEMINI_CHAT_MODEL || 'gemini-3.1-flash-lite';
 
 // Call Vertex AI Gemini generateContent and return the text reply.
 export async function callGemini(opts: GeminiCallOpts): Promise<string> {
