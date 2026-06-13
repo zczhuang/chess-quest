@@ -4,8 +4,11 @@ A joyful chess web app for **kids and adults alike** — bite-size lessons (Duol
 thousands of real-game puzzles, and friendly AI opponents from total beginner to grandmaster.
 
 Built with Next.js 14 (App Router) · Supabase (auth + cloud progress) · Stockfish 17 WASM ·
-Vertex AI Gemini (AI coach) · Tailwind. Deploys on Vercel. Works fully **offline/guest** —
-sign in with Google only to sync progress across devices.
+Vertex AI Gemini (AI coach) · Tailwind. Deploys on Vercel.
+
+> **Private app.** Every route is OAuth-walled: only signed-in Google accounts listed in
+> `ALLOWED_EMAILS` can use it (see `middleware.ts` / `lib/auth.ts`). Locally, with no Supabase
+> env configured, the wall is off so you can develop in pure-local mode.
 
 ## The three pillars
 
@@ -48,8 +51,9 @@ npm install
 npm run dev          # http://localhost:3000 — runs in guest mode with no env set
 ```
 
-The app runs with **zero configuration** (guest/local progress). To enable Google sign-in +
-cloud sync and the AI coach, fill `.env.local` (see `.env.example`).
+With no Supabase env set, the app runs locally with **zero configuration** and no auth wall
+(local progress). Setting the Supabase env turns on Google sign-in, cloud sync, and the
+`ALLOWED_EMAILS` wall (see `.env.example`).
 
 ### Rebuilding the puzzle packs
 

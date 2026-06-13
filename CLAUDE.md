@@ -42,8 +42,12 @@ Two skins from one codebase via `data-theme`: `kid` (playful) and `classic` (woo
 ## Product guardrails
 
 - Kids' app: no ads, no dark patterns, no chat/social, parent-managed profiles (COPPA).
-- Works fully in guest/local mode with no env configured; Supabase only adds cloud sync.
-- Keep the AI coach chess-only and child-safe; never pass child free-text to the model.
+- **Private app**: the whole thing is OAuth-walled. `middleware.ts` + `lib/auth.ts`
+  require a signed-in user whose email is in `ALLOWED_EMAILS` on every route except
+  the landing gate (`/`) and `/auth/*` (API → 401, pages → redirect to `/`). Empty
+  allowlist = any signed-in account. Locally still runs with no Supabase env (no wall).
+- Keep the AI coach chess-only and child-safe (`gemini-3.1-flash-lite`); never pass
+  child free-text to the model.
 
 ## Git / deploy
 
