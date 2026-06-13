@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---- Chess Quest design tokens (--cq-*) ----
+   Two themes share one codebase: 'kid' (bright, rounded, playful) and
+   'classic' (calm, woody, lichess-like). The board reads ONLY --cq-board-*
+   tokens, so swapping data-theme reskins everything. */
+
+:root {
+  --cq-bg: #faf9ff;
+  --cq-ink: #2b2440;
+  --cq-brand: #7c5cff;
+  --cq-gold: #ffc94d;
+
+  /* classic board (default) */
+  --cq-board-light: #f0d9b5;
+  --cq-board-dark: #b58863;
+  --cq-board-selected: rgba(124, 92, 255, 0.45);
+  --cq-board-lastmove: rgba(255, 201, 77, 0.45);
+  --cq-board-dest: rgba(43, 36, 64, 0.22);
+  --cq-board-dest-capture: rgba(43, 36, 64, 0.35);
+  --cq-board-shadow: 0 6px 0 rgba(43, 36, 64, 0.18);
+}
+
+[data-theme='kid'] {
+  --cq-bg: #f6f2ff;
+  --cq-board-light: #fdf6e3;
+  --cq-board-dark: #b39df0;
+  --cq-board-selected: rgba(255, 159, 67, 0.55);
+  --cq-board-lastmove: rgba(255, 201, 77, 0.55);
+  --cq-board-dest: rgba(124, 92, 255, 0.3);
+  --cq-board-dest-capture: rgba(255, 107, 94, 0.55);
+  --cq-board-shadow: 0 8px 0 rgba(124, 92, 255, 0.25);
+}
+
+html,
+body {
+  background: var(--cq-bg);
+  color: var(--cq-ink);
+}
+
+/* Big friendly buttons */
+.cq-btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 font-extrabold transition active:translate-y-1 active:shadow-none;
+}
+.cq-btn-brand {
+  @apply cq-btn bg-brand text-white shadow-pop hover:bg-brand-dark;
+}
+.cq-btn-gold {
+  @apply cq-btn bg-gold text-ink shadow-pop hover:bg-gold-dark;
+}
+.cq-btn-ghost {
+  @apply cq-btn bg-white text-ink border-2 border-line shadow-pop hover:bg-soft;
+}
+
+.cq-card {
+  @apply bg-white rounded-xl2 border-2 border-line shadow-pop;
+}
