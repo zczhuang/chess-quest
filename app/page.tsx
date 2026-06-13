@@ -49,60 +49,67 @@ export default async function Home() {
   }
 
   // Allowed (or Supabase not configured → local-only dev) → full landing.
+  const pillars = [
+    { href: '/learn', emoji: '📚', title: 'Learn', from: '#7c5cff', to: '#a78bf0', body: 'A Duolingo-style path of 3-minute lessons. Earn stars, keep your streak, and watch Rookie the Rook cheer you on.' },
+    { href: '/puzzles', emoji: '🧩', title: 'Puzzles', from: '#2fb877', to: '#56b6ff', body: 'Thousands of real-game puzzles that adapt to your level — plus Puzzle Rush against the clock.' },
+    { href: '/play', emoji: '⚔️', title: 'Play', from: '#ff9f43', to: '#ff6b5e', body: 'Eight personality bots from Pip the Pawn to Maximus the final boss. Hints, takebacks & an AI coach.' },
+  ];
   return (
     <>
       <Nav />
       <main className="max-w-5xl mx-auto px-4">
-        <section className="py-14 sm:py-20 text-center">
-          <div className="text-7xl sm:text-8xl animate-float mb-4" aria-hidden>
-            🏰
+        <section className="relative py-16 sm:py-24 text-center overflow-hidden">
+          {/* floating chess pieces */}
+          <div aria-hidden className="pointer-events-none absolute inset-0 select-none">
+            <span className="absolute left-[8%] top-[18%] text-4xl sm:text-5xl opacity-30 animate-float" style={{ animationDelay: '0s' }}>♞</span>
+            <span className="absolute right-[10%] top-[12%] text-5xl sm:text-6xl opacity-25 animate-float" style={{ animationDelay: '0.6s' }}>♛</span>
+            <span className="absolute left-[14%] bottom-[12%] text-4xl sm:text-5xl opacity-25 animate-float" style={{ animationDelay: '1.1s' }}>♟</span>
+            <span className="absolute right-[14%] bottom-[16%] text-4xl sm:text-5xl opacity-30 animate-float" style={{ animationDelay: '1.6s' }}>♝</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight">
-            Learn chess the <span className="text-brand">fun</span> way
-          </h1>
-          <p className="mt-4 text-lg sm:text-xl max-w-2xl mx-auto opacity-80 font-semibold">
-            Bite-size lessons, thousands of puzzles, and friendly robot opponents — from
-            &ldquo;how does the horsey move?&rdquo; to checkmating a grandmaster.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/learn" className="cq-btn-gold text-lg">
-              🚀 Start learning
-            </Link>
-            <Link href="/play" className="cq-btn-ghost text-lg">
-              ⚔️ Play vs a bot
-            </Link>
-            <AuthButton />
+
+          <div className="relative">
+            <span className="cq-chip cq-rise mb-5 text-brand">✨ Free · for kids &amp; grown-ups</span>
+            <div className="text-7xl sm:text-8xl mb-2 animate-float cq-glow-pulse inline-block" aria-hidden>
+              🏰
+            </div>
+            <h1 className="cq-rise cq-rise-1 text-5xl sm:text-7xl font-black tracking-tight leading-[1.05]">
+              Learn chess the<br className="hidden sm:block" /> <span className="cq-gradient-text">fun</span> way
+            </h1>
+            <p className="cq-rise cq-rise-2 mt-5 text-lg sm:text-xl max-w-2xl mx-auto text-[color:var(--cq-muted)] font-semibold">
+              Bite-size lessons, thousands of puzzles, and friendly robot opponents — from
+              &ldquo;how does the horsey move?&rdquo; to checkmating a grandmaster.
+            </p>
+            <div className="cq-rise cq-rise-3 mt-9 flex flex-wrap items-center justify-center gap-3">
+              <Link href="/learn" className="cq-btn-gold text-lg">
+                🚀 Start learning
+              </Link>
+              <Link href="/play" className="cq-btn-ghost text-lg">
+                ⚔️ Play vs a bot
+              </Link>
+              <AuthButton />
+            </div>
           </div>
         </section>
 
-        <section className="grid sm:grid-cols-3 gap-4 pb-16">
-          <Link href="/learn" className="cq-card p-6 hover:-translate-y-1 transition block">
-            <div className="text-4xl mb-3">📚</div>
-            <h2 className="font-black text-xl mb-1">Learn</h2>
-            <p className="opacity-75 font-semibold text-sm">
-              A Duolingo-style path of 3-minute lessons. Earn stars, keep your streak, and watch
-              Rookie the Rook cheer you on.
-            </p>
-          </Link>
-          <Link href="/puzzles" className="cq-card p-6 hover:-translate-y-1 transition block">
-            <div className="text-4xl mb-3">🧩</div>
-            <h2 className="font-black text-xl mb-1">Puzzles</h2>
-            <p className="opacity-75 font-semibold text-sm">
-              Thousands of real-game puzzles that adapt to your level — plus Puzzle Rush against
-              the clock.
-            </p>
-          </Link>
-          <Link href="/play" className="cq-card p-6 hover:-translate-y-1 transition block">
-            <div className="text-4xl mb-3">⚔️</div>
-            <h2 className="font-black text-xl mb-1">Play</h2>
-            <p className="opacity-75 font-semibold text-sm">
-              Eight personality bots from Pip the Pawn (just learned the rules!) to Maximus the
-              final boss. Hints and takebacks included.
-            </p>
-          </Link>
+        <section className="grid sm:grid-cols-3 gap-5 pb-20">
+          {pillars.map((p, i) => (
+            <Link key={p.href} href={p.href} className={`cq-card cq-card-interactive cq-rise cq-rise-${i + 1} p-6 block group`}>
+              <div
+                className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-pop transition-transform group-hover:scale-110 group-hover:-rotate-6"
+                style={{ background: `linear-gradient(135deg, ${p.from}, ${p.to})` }}
+              >
+                {p.emoji}
+              </div>
+              <h2 className="font-black text-xl mb-1">{p.title}</h2>
+              <p className="text-[color:var(--cq-muted)] font-semibold text-sm">{p.body}</p>
+              <span className="mt-3 inline-block font-extrabold text-brand opacity-0 group-hover:opacity-100 transition">
+                Open →
+              </span>
+            </Link>
+          ))}
         </section>
       </main>
-      <footer className="border-t-2 border-line py-8 text-center text-sm opacity-60 font-semibold">
+      <footer className="border-t border-white/40 py-8 text-center text-sm text-[color:var(--cq-muted)] font-semibold">
         Chess Quest · made with ♥ for young champions and their grown-ups · piece art{' '}
         <a href="https://github.com/lichess-org/lila" className="underline">
           cburnett (CC BY-SA)

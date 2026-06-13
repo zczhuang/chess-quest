@@ -2,58 +2,237 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ---- Chess Quest design tokens (--cq-*) ----
-   Two themes share one codebase: 'kid' (bright, rounded, playful) and
-   'classic' (calm, woody, lichess-like). The board reads ONLY --cq-board-*
-   tokens, so swapping data-theme reskins everything. */
+/* ============================================================================
+   Chess Quest — "Royal Arcade" design system.
+   Two themes share one codebase via [data-theme]: 'kid' (bright, magical) and
+   'classic' (calm, woody). The board reads ONLY --cq-board-* tokens.
+   ========================================================================== */
 
 :root {
-  --cq-bg: #faf9ff;
-  --cq-ink: #2b2440;
+  --cq-ink: #221b3a;
+  --cq-muted: #6a6385;
   --cq-brand: #7c5cff;
+  --cq-brand-2: #9d7bff;
   --cq-gold: #ffc94d;
+  --cq-gold-2: #ffb020;
+  --cq-surface: #ffffff;
+  --cq-line: #ece8f8;
+
+  /* aurora background stops */
+  --cq-bg-base: #f3f0ff;
+  --cq-aurora-1: rgba(124, 92, 255, 0.28);
+  --cq-aurora-2: rgba(255, 126, 182, 0.22);
+  --cq-aurora-3: rgba(80, 170, 255, 0.22);
+  --cq-aurora-4: rgba(255, 201, 77, 0.18);
+
+  /* layered shadows */
+  --cq-shadow-sm: 0 1px 2px rgba(34, 27, 58, 0.06), 0 2px 8px rgba(34, 27, 58, 0.06);
+  --cq-shadow: 0 2px 4px rgba(34, 27, 58, 0.05), 0 8px 24px rgba(34, 27, 58, 0.10);
+  --cq-shadow-lg: 0 8px 16px rgba(34, 27, 58, 0.10), 0 24px 48px rgba(34, 27, 58, 0.16);
+  --cq-glow: 0 8px 30px rgba(124, 92, 255, 0.35);
 
   /* classic board (default) */
-  --cq-board-light: #f0d9b5;
-  --cq-board-dark: #b58863;
-  --cq-board-selected: rgba(124, 92, 255, 0.45);
-  --cq-board-lastmove: rgba(255, 201, 77, 0.45);
-  --cq-board-dest: rgba(43, 36, 64, 0.22);
-  --cq-board-dest-capture: rgba(43, 36, 64, 0.35);
-  --cq-board-shadow: 0 6px 0 rgba(43, 36, 64, 0.18);
+  --cq-board-light: #f1e7d0;
+  --cq-board-dark: #9a7b63;
+  --cq-board-selected: rgba(124, 92, 255, 0.5);
+  --cq-board-lastmove: rgba(255, 201, 77, 0.5);
+  --cq-board-dest: rgba(34, 27, 58, 0.22);
+  --cq-board-dest-capture: rgba(34, 27, 58, 0.35);
+  --cq-board-frame: linear-gradient(145deg, #5b4a7e, #2c2447);
+  --cq-board-shadow: 0 18px 40px rgba(34, 27, 58, 0.32);
+  --cq-piece-shadow: drop-shadow(0 2px 1.5px rgba(0, 0, 0, 0.28));
 }
 
 [data-theme='kid'] {
-  --cq-bg: #f6f2ff;
-  --cq-board-light: #fdf6e3;
-  --cq-board-dark: #b39df0;
-  --cq-board-selected: rgba(255, 159, 67, 0.55);
-  --cq-board-lastmove: rgba(255, 201, 77, 0.55);
-  --cq-board-dest: rgba(124, 92, 255, 0.3);
-  --cq-board-dest-capture: rgba(255, 107, 94, 0.55);
-  --cq-board-shadow: 0 8px 0 rgba(124, 92, 255, 0.25);
+  --cq-bg-base: #efe9ff;
+  --cq-aurora-1: rgba(124, 92, 255, 0.55);
+  --cq-aurora-2: rgba(255, 122, 186, 0.5);
+  --cq-aurora-3: rgba(86, 182, 255, 0.5);
+  --cq-aurora-4: rgba(255, 201, 77, 0.45);
+
+  --cq-board-light: #fbf3df;
+  --cq-board-dark: #a78bf0;
+  --cq-board-selected: rgba(255, 159, 67, 0.6);
+  --cq-board-lastmove: rgba(255, 201, 77, 0.6);
+  --cq-board-dest: rgba(124, 92, 255, 0.32);
+  --cq-board-dest-capture: rgba(255, 107, 94, 0.6);
+  --cq-board-frame: linear-gradient(145deg, #b39df7, #7c5cff);
+  --cq-board-shadow: 0 20px 44px rgba(124, 92, 255, 0.38);
+  --cq-piece-shadow: drop-shadow(0 2px 1.5px rgba(60, 30, 90, 0.3));
+}
+
+[data-theme='classic'] {
+  --cq-bg-base: #eef0fb;
+  --cq-aurora-1: rgba(99, 102, 168, 0.22);
+  --cq-aurora-2: rgba(120, 140, 190, 0.18);
+  --cq-aurora-3: rgba(90, 120, 170, 0.18);
+  --cq-aurora-4: rgba(180, 160, 120, 0.16);
+  --cq-brand: #6a59c9;
+  --cq-brand-2: #8a78e6;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 html,
 body {
-  background: var(--cq-bg);
   color: var(--cq-ink);
+  background: var(--cq-bg-base);
 }
 
-/* Big friendly buttons */
+/* Aurora mesh background + faint chessboard texture, fixed behind everything. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(70% 60% at 8% 0%, var(--cq-aurora-1) 0%, transparent 55%),
+    radial-gradient(65% 55% at 98% 6%, var(--cq-aurora-2) 0%, transparent 55%),
+    radial-gradient(70% 65% at 85% 100%, var(--cq-aurora-3) 0%, transparent 55%),
+    radial-gradient(60% 55% at 5% 95%, var(--cq-aurora-4) 0%, transparent 55%);
+  background-attachment: fixed;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(34, 27, 58, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 27, 58, 0.025) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 30%, transparent 75%);
+}
+
+/* ---- Buttons ------------------------------------------------------------- */
 .cq-btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 font-extrabold transition active:translate-y-1 active:shadow-none;
+  @apply relative inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 font-extrabold transition-all duration-150 overflow-hidden;
+  will-change: transform;
+}
+.cq-btn:active {
+  transform: translateY(2px);
+}
+/* glossy sweep */
+.cq-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%);
+  transform: translateX(-130%);
+  transition: transform 0.6s ease;
+}
+.cq-btn:hover::after {
+  transform: translateX(130%);
 }
 .cq-btn-brand {
-  @apply cq-btn bg-brand text-white shadow-pop hover:bg-brand-dark;
+  @apply cq-btn text-white;
+  background: linear-gradient(135deg, var(--cq-brand), var(--cq-brand-2));
+  box-shadow: 0 6px 0 rgba(67, 49, 158, 0.45), var(--cq-glow);
+}
+.cq-btn-brand:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 rgba(67, 49, 158, 0.45), 0 14px 36px rgba(124, 92, 255, 0.45);
 }
 .cq-btn-gold {
-  @apply cq-btn bg-gold text-ink shadow-pop hover:bg-gold-dark;
+  @apply cq-btn text-ink;
+  background: linear-gradient(135deg, var(--cq-gold), var(--cq-gold-2));
+  box-shadow: 0 6px 0 rgba(196, 130, 10, 0.5), 0 10px 30px rgba(255, 176, 32, 0.4);
+}
+.cq-btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 rgba(196, 130, 10, 0.5), 0 16px 36px rgba(255, 176, 32, 0.5);
 }
 .cq-btn-ghost {
-  @apply cq-btn bg-white text-ink border-2 border-line shadow-pop hover:bg-soft;
+  @apply cq-btn text-ink;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1.5px solid var(--cq-line);
+  box-shadow: var(--cq-shadow-sm);
+  backdrop-filter: blur(6px);
+}
+.cq-btn-ghost:hover {
+  transform: translateY(-2px);
+  border-color: var(--cq-brand);
+  box-shadow: var(--cq-shadow);
 }
 
+/* ---- Cards --------------------------------------------------------------- */
 .cq-card {
-  @apply bg-white rounded-xl2 border-2 border-line shadow-pop;
+  position: relative;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 1.25rem;
+  box-shadow: var(--cq-shadow);
+  backdrop-filter: blur(8px);
+}
+/* subtle gradient top edge */
+.cq-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, rgba(124, 92, 255, 0.35), transparent 40%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.cq-card-interactive {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.cq-card-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--cq-shadow-lg);
+}
+
+/* ---- Text / utility ------------------------------------------------------ */
+.cq-gradient-text {
+  background: linear-gradient(120deg, var(--cq-brand), #ff7eb6 60%, var(--cq-gold-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.cq-glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+}
+.cq-chip {
+  @apply inline-flex items-center gap-1 rounded-full px-3 py-1 font-extrabold text-sm;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: var(--cq-shadow-sm);
+}
+
+/* ---- Board frame --------------------------------------------------------- */
+.cq-board-frame {
+  position: relative;
+  border-radius: 1.1rem;
+  padding: 10px;
+  background: var(--cq-board-frame);
+  box-shadow: var(--cq-board-shadow), inset 0 2px 4px rgba(255, 255, 255, 0.25), inset 0 -3px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* ---- Motion -------------------------------------------------------------- */
+@keyframes cq-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.cq-rise { animation: cq-rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.cq-rise-1 { animation-delay: 0.06s; }
+.cq-rise-2 { animation-delay: 0.12s; }
+.cq-rise-3 { animation-delay: 0.18s; }
+
+@keyframes cq-glow-pulse {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(124, 92, 255, 0)); }
+  50% { filter: drop-shadow(0 0 18px rgba(124, 92, 255, 0.5)); }
+}
+.cq-glow-pulse { animation: cq-glow-pulse 2.6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::after, *::before { animation: none !important; transition: none !important; }
 }

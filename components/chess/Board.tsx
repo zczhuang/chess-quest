@@ -236,10 +236,10 @@ export default function Board({
   });
 
   return (
+    <div className="cq-board-frame">
     <div
       ref={boardRef}
-      className="relative w-full aspect-square select-none touch-none rounded-xl overflow-hidden"
-      style={{ boxShadow: 'var(--cq-board-shadow)' }}
+      className="relative w-full aspect-square select-none touch-none rounded-lg overflow-hidden"
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
@@ -289,6 +289,7 @@ export default function Board({
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }
@@ -350,6 +351,7 @@ function PieceView({
         transition: animate ? `transform ${animateMs}ms ease` : 'none',
         opacity: hidden ? 0 : 1,
         cursor: pickable ? 'grab' : 'default',
+        filter: 'var(--cq-piece-shadow)',
       }}
     />
   );

@@ -30,40 +30,43 @@ export default function Nav() {
   }, [pathname]);
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b-2 border-line">
+    <nav className="sticky top-0 z-50 cq-glass border-b border-white/40">
       <div className="max-w-5xl mx-auto px-4 h-16 flex items-center gap-3">
-        <Link href="/" className="flex items-center gap-2 font-black text-xl text-brand shrink-0">
-          <span className="text-2xl">🏰</span>
-          <span className="hidden sm:inline">Chess Quest</span>
+        <Link href="/" className="flex items-center gap-2 font-black text-xl shrink-0 group">
+          <span className="text-2xl transition-transform group-hover:rotate-12 group-hover:scale-110">🏰</span>
+          <span className="hidden sm:inline cq-gradient-text">Chess Quest</span>
         </Link>
         <div className="flex-1 flex justify-center gap-1 sm:gap-2">
-          {LINKS.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={`px-3 sm:px-4 py-2 rounded-xl font-extrabold text-sm sm:text-base transition ${
-                pathname?.startsWith(l.href) ? 'bg-brand text-white shadow-pop' : 'text-ink hover:bg-soft'
-              }`}
-            >
-              <span className="mr-1">{l.emoji}</span>
-              <span className="hidden sm:inline">{l.label}</span>
-            </Link>
-          ))}
+          {LINKS.map((l) => {
+            const active = pathname?.startsWith(l.href);
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`px-3 sm:px-4 py-2 rounded-xl font-extrabold text-sm sm:text-base transition-all ${
+                  active ? 'cq-btn-brand !px-3 sm:!px-4 !py-2 !rounded-xl' : 'text-ink/80 hover:bg-white/60 hover:text-ink'
+                }`}
+              >
+                <span className="mr-1">{l.emoji}</span>
+                <span className="hidden sm:inline">{l.label}</span>
+              </Link>
+            );
+          })}
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {stats && (
             <>
-              <span className="hidden sm:flex items-center gap-1 font-extrabold text-flame" title="Day streak">
+              <span className="hidden sm:flex cq-chip text-flame" title="Day streak">
                 🔥 {stats.streak}
               </span>
-              <span className="flex items-center gap-1 font-extrabold text-gold-dark" title="XP">
+              <span className="cq-chip text-gold-dark" title="XP">
                 ⭐ {stats.xp}
               </span>
             </>
           )}
           <Link
             href="/dashboard"
-            className="w-10 h-10 rounded-full bg-soft border-2 border-line flex items-center justify-center text-xl hover:scale-105 transition"
+            className="w-10 h-10 rounded-full bg-white/80 border border-white flex items-center justify-center text-xl hover:scale-110 transition shadow-pop"
             title={player ? player.name : 'Choose player'}
           >
             {player ? player.avatar : '👤'}
