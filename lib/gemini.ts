@@ -64,6 +64,9 @@ export interface GeminiCallOpts {
   messages: GeminiMessage[];
   temperature?: number;
   maxOutputTokens?: number;
+  /** Gemini 2.5 models "think" by default, which can eat the whole output budget
+   * on short tasks. 0 disables it (the default here — our prompts are simple). */
+  thinkingBudget?: number;
 }
 
 const DEFAULT_MODEL = process.env.GEMINI_CHAT_MODEL || 'gemini-2.5-flash';
@@ -84,6 +87,7 @@ export async function callGemini(opts: GeminiCallOpts): Promise<string> {
     generationConfig: {
       temperature: opts.temperature ?? 0.5,
       maxOutputTokens: opts.maxOutputTokens ?? 600,
+      thinkingConfig: { thinkingBudget: opts.thinkingBudget ?? 0 },
     },
   };
 
