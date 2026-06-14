@@ -75,37 +75,25 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-html,
-body {
+html {
   color: var(--cq-ink);
-  background: var(--cq-bg-base);
-}
-
-/* Aurora mesh background + faint chessboard texture, fixed behind everything. */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  background:
+  /* Aurora mesh painted DIRECTLY on <html> (no fixed/negative-z pseudo-elements
+     — those intermittently paint over white content on iOS Safari, which was
+     making white "disappear"). A plain background layer always paints behind
+     content, with no stacking-context surprises on iPadOS. */
+  background-color: var(--cq-bg-base);
+  background-image:
     radial-gradient(70% 60% at 8% 0%, var(--cq-aurora-1) 0%, transparent 55%),
     radial-gradient(65% 55% at 98% 6%, var(--cq-aurora-2) 0%, transparent 55%),
     radial-gradient(70% 65% at 85% 100%, var(--cq-aurora-3) 0%, transparent 55%),
     radial-gradient(60% 55% at 5% 95%, var(--cq-aurora-4) 0%, transparent 55%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100%;
 }
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.5;
-  background-image:
-    linear-gradient(rgba(34, 27, 58, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 27, 58, 0.025) 1px, transparent 1px);
-  background-size: 56px 56px;
-  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 30%, transparent 75%);
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 30%, transparent 75%);
+body {
+  background: transparent;
+  min-height: 100vh;
 }
 
 /* ---- Buttons ------------------------------------------------------------- */
@@ -185,10 +173,8 @@ body::after {
   color: transparent;
 }
 .cq-glass {
-  /* high opacity so it stays readable even where iOS drops the blur */
-  background: rgba(255, 255, 255, 0.9);
-  -webkit-backdrop-filter: saturate(160%) blur(12px);
-  backdrop-filter: saturate(160%) blur(12px);
+  /* solid white — no backdrop-filter (iOS Safari drops/mis-composites it) */
+  background: #ffffff;
 }
 .cq-chip {
   @apply inline-flex items-center gap-1 rounded-full px-3 py-1 font-extrabold text-sm;
