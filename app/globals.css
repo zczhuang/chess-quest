@@ -92,7 +92,6 @@ body::before {
     radial-gradient(65% 55% at 98% 6%, var(--cq-aurora-2) 0%, transparent 55%),
     radial-gradient(70% 65% at 85% 100%, var(--cq-aurora-3) 0%, transparent 55%),
     radial-gradient(60% 55% at 5% 95%, var(--cq-aurora-4) 0%, transparent 55%);
-  background-attachment: fixed;
 }
 body::after {
   content: '';
@@ -149,10 +148,9 @@ body::after {
 }
 .cq-btn-ghost {
   @apply cq-btn text-ink;
-  background: rgba(255, 255, 255, 0.85);
+  background: #ffffff;
   border: 1.5px solid var(--cq-line);
   box-shadow: var(--cq-shadow-sm);
-  backdrop-filter: blur(6px);
 }
 .cq-btn-ghost:hover {
   transform: translateY(-2px);
@@ -161,33 +159,22 @@ body::after {
 }
 
 /* ---- Cards --------------------------------------------------------------- */
+/* NOTE: surfaces are near-solid white (no backdrop-filter, no mask-composite
+   border trick) — those break on iPadOS Safari and made white "disappear".
+   The gradient top-edge is a Safari-safe inset box-shadow instead. */
 .cq-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: #ffffff;
+  border: 1px solid var(--cq-line);
   border-radius: 1.25rem;
-  box-shadow: var(--cq-shadow);
-  backdrop-filter: blur(8px);
-}
-/* subtle gradient top edge */
-.cq-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(180deg, rgba(124, 92, 255, 0.35), transparent 40%);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+  box-shadow: var(--cq-shadow), inset 0 1px 0 rgba(124, 92, 255, 0.18);
 }
 .cq-card-interactive {
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 .cq-card-interactive:hover {
   transform: translateY(-4px);
-  box-shadow: var(--cq-shadow-lg);
+  box-shadow: var(--cq-shadow-lg), inset 0 1px 0 rgba(124, 92, 255, 0.18);
 }
 
 /* ---- Text / utility ------------------------------------------------------ */
@@ -198,13 +185,14 @@ body::after {
   color: transparent;
 }
 .cq-glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: saturate(180%) blur(14px);
-  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  /* high opacity so it stays readable even where iOS drops the blur */
+  background: rgba(255, 255, 255, 0.9);
+  -webkit-backdrop-filter: saturate(160%) blur(12px);
+  backdrop-filter: saturate(160%) blur(12px);
 }
 .cq-chip {
   @apply inline-flex items-center gap-1 rounded-full px-3 py-1 font-extrabold text-sm;
-  background: rgba(255, 255, 255, 0.7);
+  background: #ffffff;
   box-shadow: var(--cq-shadow-sm);
 }
 
