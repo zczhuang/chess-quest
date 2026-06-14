@@ -120,14 +120,16 @@ export const BOTS: BotDef[] = [
   {
     id: 'maximus',
     name: 'Maximus',
-    elo: 2200,
+    elo: 2500,
     emoji: '🤖',
     color: '#2b2440',
-    tagline: 'The final boss. Beats almost everyone.',
+    tagline: 'The final boss — full-strength engine. Good luck.',
     intro: 'CHALLENGER DETECTED. INITIATING CHESS PROTOCOL.',
     winLine: 'VICTORY LOGGED. HUMANS REMAIN ADORABLE.',
     loseLine: 'ERROR... DEFEAT? RECALIBRATING. WELL PLAYED, HUMAN.',
-    engine: { skill: 20, elo: 2400, moveTimeMs: 1200, randomChance: 0 },
+    // Uncapped Stockfish at full skill, thinking 2s — ~2500 on the lite engine,
+    // a genuinely strong boss. (No Elo limit, so it plays its best.)
+    engine: { skill: 20, moveTimeMs: 2000, randomChance: 0 },
   },
 ];
 

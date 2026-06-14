@@ -51,6 +51,8 @@ class StockfishEngine {
         const onMsg = (e: MessageEvent) => {
           const line = String(e.data);
           if (line === 'uciok') {
+            // A bigger transposition table helps even the single-threaded build.
+            w.postMessage('setoption name Hash value 64');
             w.removeEventListener('message', onMsg);
             resolve();
           }
