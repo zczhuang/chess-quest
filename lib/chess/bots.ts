@@ -1,9 +1,15 @@
-// The bot ladder. Difficulty is produced by combining four levers:
-//   1. randomChance — probability of playing a random legal move (the great equalizer:
-//      Stockfish's Skill Level floor is still far too strong for a 5-year-old).
-//   2. Skill Level (0-20) — Stockfish's built-in weakening.
-//   3. depth / moveTimeMs — shallow search plays "human-shallow" moves.
-//   4. elo — UCI_LimitStrength (only meaningful ≥1320, used for the upper bots).
+// The bot ladder. Difficulty is produced by combining four levers, with the
+// emphasis on WEAK-BUT-COHERENT play (Stockfish picking sub-optimal-but-sensible
+// moves), NOT random flailing:
+//   1. Skill Level (0-20) — Stockfish's built-in weakening; at low skill it plays
+//      reasonable moves but misses the best one. This is the primary easy-bot dial.
+//   2. depth — shallow search (1-6 ply) misses deeper tactics → "human-weak" play
+//      that still grabs hanging pieces and avoids 1-move blunders.
+//   3. elo — UCI_LimitStrength/UCI_Elo (≥1320) makes the upper bots actually play
+//      at their displayed rating.
+//   4. randomChance — a SMALL chance of an outright blunder, kept low (≤18%) so the
+//      easy bots stay beatable for young kids without feeling broken. Was much
+//      higher; lowered so bots play recognizable chess.
 
 export interface BotEngineParams {
   skill: number;
@@ -37,7 +43,7 @@ export const BOTS: BotDef[] = [
     intro: "Hi! I'm Pip! I mostly move pieces because they look fun. Let's play!",
     winLine: 'Wow, I won?! That never happens!',
     loseLine: "Great game! You're really good at this!",
-    engine: { skill: 0, depth: 1, randomChance: 0.65 },
+    engine: { skill: 0, depth: 1, randomChance: 0.18 },
   },
   {
     id: 'rookie',
@@ -49,7 +55,7 @@ export const BOTS: BotDef[] = [
     intro: "Rookie here! I love castles and straight lines. Watch out... or don't!",
     winLine: 'Castle power! That was fun!',
     loseLine: 'You got me! My towers are tumbling!',
-    engine: { skill: 0, depth: 1, randomChance: 0.45 },
+    engine: { skill: 0, depth: 2, randomChance: 0.10 },
   },
   {
     id: 'bella',
@@ -61,7 +67,7 @@ export const BOTS: BotDef[] = [
     intro: "I'm Bella! I see everything on the diagonals... mostly.",
     winLine: 'The diagonals never lie!',
     loseLine: 'Well played! I should watch the straight lines too...',
-    engine: { skill: 1, depth: 2, randomChance: 0.25 },
+    engine: { skill: 1, depth: 3, randomChance: 0.05 },
   },
   {
     id: 'nelly',
@@ -73,7 +79,7 @@ export const BOTS: BotDef[] = [
     intro: 'Neigh! I jump in L-shapes and I LOVE forks. En garde!',
     winLine: 'Galloping victory! 🐴',
     loseLine: 'You out-jumped me! Rematch sometime?',
-    engine: { skill: 3, depth: 3, randomChance: 0.12 },
+    engine: { skill: 3, depth: 4, randomChance: 0.02 },
   },
   {
     id: 'quinn',
@@ -85,7 +91,7 @@ export const BOTS: BotDef[] = [
     intro: "Queen Quinn at your service. I do hope you've been practicing.",
     winLine: 'A royal performance, if I may say so.',
     loseLine: 'Impressive! You play like royalty.',
-    engine: { skill: 6, depth: 5, randomChance: 0.05 },
+    engine: { skill: 5, depth: 6, randomChance: 0 },
   },
   {
     id: 'rex',
@@ -97,7 +103,7 @@ export const BOTS: BotDef[] = [
     intro: 'ROAR. I mean — good luck. You will need it.',
     winLine: 'RAWR means checkmate in dinosaur.',
     loseLine: 'You have bested the king of the board. Respect.',
-    engine: { skill: 10, moveTimeMs: 400, randomChance: 0 },
+    engine: { skill: 20, elo: 1400, moveTimeMs: 500, randomChance: 0 },
   },
   {
     id: 'gambit',
@@ -109,7 +115,7 @@ export const BOTS: BotDef[] = [
     intro: "Sit down, dear. Grandma's been playing since before computers.",
     winLine: 'Would you like a cookie with that checkmate, sweetie?',
     loseLine: 'Marvelous! You remind me of myself at your age.',
-    engine: { skill: 20, elo: 1700, moveTimeMs: 600, randomChance: 0 },
+    engine: { skill: 20, elo: 1700, moveTimeMs: 700, randomChance: 0 },
   },
   {
     id: 'maximus',
@@ -121,7 +127,7 @@ export const BOTS: BotDef[] = [
     intro: 'CHALLENGER DETECTED. INITIATING CHESS PROTOCOL.',
     winLine: 'VICTORY LOGGED. HUMANS REMAIN ADORABLE.',
     loseLine: 'ERROR... DEFEAT? RECALIBRATING. WELL PLAYED, HUMAN.',
-    engine: { skill: 20, moveTimeMs: 900, randomChance: 0 },
+    engine: { skill: 20, elo: 2400, moveTimeMs: 1200, randomChance: 0 },
   },
 ];
 
